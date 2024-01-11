@@ -40,12 +40,32 @@ entry:
 	pushl	%eax	/* multiboot_magic    */
 	call	main
 
-	/* Reboot the machine. Cheeky but convenient. */
-	int	$0x19
+	/* Handle the various options.on_exit values. */
+	cmp	$1, %eax
+	je	reboot
+	cmp	$2, %eax
+	je	shutdown
 
-	/* Normally not reached. */
-halt:	hlt
-	jmp	halt
+	/* Default to hanging the machine. */
+hang:
+	hlt
+	jmp	hang
+
+	/* Reboot the machine. */
+reboot:
+	int	$0x19
+	jmp	hang
+
+	/* Shutdown the machine. */
+shutdown:
+	/* This is specific to QEMU and should be (mostly)
+	 * harmless on other machines. */
+	mov	$0x2000, %eax
+	mov	$0x604, %edx
+	out	%eax,%edx
+
+	/* Not implementing APM/ACPI shutdown. */
+	jmp hang
 
 /*
  * Allocate a small stack.

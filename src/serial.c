@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
+#include "options.h"
 #include "serial.h"
 #include "utils.h"
 
@@ -14,19 +15,19 @@
  */
 void serial_init(void)
 {
-	while (!(in8(SERIAL_PORT + 5) & 0x60)) /* wait until not busy */
+	while (!(in8(options.serial_port + 5) & 0x60)) /* wait until not busy */
 		;
 
-	out8(SERIAL_PORT + 1, 0x00); /* disable generating interrupts */
-	out8(SERIAL_PORT + 3, 0x80); /* line control register: command: set divisor */
-	out8(SERIAL_PORT,     0x01); /* set low byte of divisor to 0x01 = 115200 baud */
-	out8(SERIAL_PORT + 1, 0x00); /* set high byte of divisor to 0x00 */
-	out8(SERIAL_PORT + 3, 0x03); /* line control register: set 8 bit, no parity, 1 stop bit */
-	out8(SERIAL_PORT + 4, 0x0b); /* modem control register: set DTR/RTS/OUT2 */
+	out8(options.serial_port + 1, 0x00); /* disable generating interrupts */
+	out8(options.serial_port + 3, 0x80); /* line control register: command: set divisor */
+	out8(options.serial_port,     0x01); /* set low byte of divisor to 0x01 = 115200 baud */
+	out8(options.serial_port + 1, 0x00); /* set high byte of divisor to 0x00 */
+	out8(options.serial_port + 3, 0x03); /* line control register: set 8 bit, no parity, 1 stop bit */
+	out8(options.serial_port + 4, 0x0b); /* modem control register: set DTR/RTS/OUT2 */
 
-	in8(SERIAL_PORT);     /* clear receiver SERIAL_PORT */
-	in8(SERIAL_PORT + 5); /* clear line status SERIAL_PORT */
-	in8(SERIAL_PORT + 6); /* clear modem status SERIAL_PORT */
+	in8(options.serial_port);     /* clear receiver */
+	in8(options.serial_port + 5); /* clear line status */
+	in8(options.serial_port + 6); /* clear modem status */
 }
 
 /*

@@ -29,3 +29,9 @@
  * arbitrary limit and exceeding it will throw an error.
  */
 #define MAX_NUM_RMRRS           16
+
+/*
+ * Default serial port to use. The first port is traditionally located at
+ * 0x3f8, and the second one at 0x2f8.
+ */
+#define CONFIG_SERIAL_PORT	0x3f8

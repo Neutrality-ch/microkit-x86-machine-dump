@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include "options.h"
 #include "utils.h"
-
-/* Hardcode the first serial port for now. */
-#define SERIAL_PORT	0x3f8
 
 /*
  * Output a single character to the serial port. Note that newlines "\n" are
@@ -20,9 +18,9 @@ static inline void serial_putc(uint8_t ch)
 	if (ch == '\n')
 		serial_putc('\r');
 
-	while ((in8(SERIAL_PORT + 5) & 0x20) == 0)
+	while ((in8(options.serial_port + 5) & 0x20) == 0)
 		;
-	out8(SERIAL_PORT, ch);
+	out8(options.serial_port, ch);
 }
 
 /*

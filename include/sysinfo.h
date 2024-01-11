@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include "config.h"
 
-/*
+/**
  * System information structure.
  */
 struct sysinfo {
