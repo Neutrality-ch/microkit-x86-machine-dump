@@ -43,7 +43,7 @@ static bool parse_mmap_tag(struct multiboot2_tag_header *tag_header)
 		if (m->type != MULTIBOOT2_MMAP_TYPE_USEABLE || m->addr < HIGHMEM_BASE_ADDR)
 			continue;
 
-		serial_puts("[*] Found a useable memory area\n");
+		serial_printf("[*] Found a usable memory area at %X size %X\n", m->addr, m->size);
 
 		/* Populate the sysinfo structure. */
 		if (sysinfo.memory.count == MAX_MEMORY_REGIONS) {

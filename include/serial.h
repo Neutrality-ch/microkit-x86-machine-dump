@@ -12,27 +12,27 @@
 #define SERIAL_PORT	0x3f8
 
 /*
- * Output a single character to the serial port.
+ * Output a single character to the serial port. Note that newlines "\n" are
+ * transparently converted to "\r\n".
  */
 static inline void serial_putc(uint8_t ch)
 {
+	if (ch == '\n')
+		serial_putc('\r');
+
 	while ((in8(SERIAL_PORT + 5) & 0x20) == 0)
 		;
 	out8(SERIAL_PORT, ch);
 }
 
 /*
- * Output a null-terminated string to the serial port. Note that newlines "\n"
- * are transparently converted to "\r\n".
+ * Output a null-terminated string to the serial port.
  */
 static inline void serial_puts(const char *s)
 {
-	while (*s) {
-		if (*s == '\n')
-			serial_putc('\r');
+	while (*s)
 		serial_putc(*s++);
-	}
 }
 
 extern void serial_init(void);
-extern void serial_put_uint64(uint64_t num);
+extern void serial_printf(const char *fmt, ...);
