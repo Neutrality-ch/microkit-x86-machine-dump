@@ -43,6 +43,12 @@ static bool parse_madt(struct acpi_madt *madt)
 	struct acpi_madt_header *header = (void *) (madt + 1);
 	while ((char *) header < (char *) madt + madt->header.length) {
 
+		/* Ignore entries with a zero length. */
+		if (header->length == 0) {
+			serial_puts("[!] Warning: MADT entry with zero length, ignoring the rest of the table.\n");
+			break;
+		}
+
 		/* Catch I/O APICs. */
 		if (header->type == ACPI_MADT_TYPE_IOAPIC &&
 		    !parse_madt_ioapic((struct acpi_madt_ioapic *) header))
@@ -140,6 +146,12 @@ static bool parse_dmar(struct acpi_dmar *dmar)
 	/* Walk the list of entries. */
 	struct acpi_dmar_header *header = (void *) (dmar + 1);
 	while ((char *) header < (char *) dmar + dmar->header.length) {
+
+		/* Ignore entries with a zero length. */
+		if (header->length == 0) {
+			serial_puts("[!] Warning: DMAR entry with zero length, ignoring the rest of the table.\n");
+			break;
+		}
 
 		/* Catch DHRDs. */
 		if (header->type == ACPI_DMAR_TYPE_DRHD &&
